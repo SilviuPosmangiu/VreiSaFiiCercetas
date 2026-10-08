@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vrei să fii Cercetaș? - Ediție TV Oficială</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold-primary: #f59e0b;
+            --gold-light: #fef08a;
+            --gold-dark: #b45309;
+            --azure-dark: #03071e;
+            --cyan-glow: #06b6d4;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020617;
+            color: #ffffff;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Studio Background Canvas */
+        #studio-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Hexagonal Polygon styling for Question & Answers */
+        .hex-outer {
+            clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 22px 100%, 0% 50%);
+            background: linear-gradient(180deg, #d4af37 0%, #ffffff 50%, #b45309 100%);
+            padding: 2px;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .hex-inner {
+            clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 20px 100%, 0% 50%);
+            background: linear-gradient(180deg, #091334 0%, #020617 100%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 12px 28px;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .answer-hex:hover:not(.disabled) .hex-outer {
+            background: linear-gradient(180deg, #38bdf8 0%, #ffffff 50%, #1d4ed8 100%);
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
+            transform: scale(1.01);
+        }
+
+        .answer-hex:hover:not(.disabled) .hex-inner {
+            background: linear-gradient(180deg, #0f2b66 0%, #051338 100%);
+        }
+
+        /* Answer Lock & Status Animations */
+        .state-locked .hex-outer {
+            background: linear-gradient(180deg, #fbbf24 0%, #ffffff 50%, #d97706 100%) !important;
+            filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.8)) !important;
+        }
+        .state-locked .hex-inner {
+            background: linear-gradient(180deg, #d97706 0%, #78350f 100%) !important;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .state-correct .hex-outer {
+            background: linear-gradient(180deg, #4ade80 0%, #ffffff 50%, #15803d 100%) !important;
+            filter: drop-shadow(0 0 22px rgba(34, 197, 94, 0.9)) !important;
+            animation: blink-correct-glow 0.4s infinite alternate;
+        }
+        .state-correct .hex-inner {
+            background: linear-gradient(180deg, #16a34a 0%, #052e16 100%) !important;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .state-wrong .hex-outer {
+            background: linear-gradient(180deg, #f87171 0%, #ffffff 50%, #b91c1c 100%) !important;
+            filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.8)) !important;
+        }
+        .state-wrong .hex-inner {
+            background: linear-gradient(180deg, #dc2626 0%, #450a0a 100%) !important;
+            color: #ffffff;
+        }
+
+        @keyframes blink-correct-glow {
+            0% { filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.5)); }
+            100% { filter: drop-shadow(0 0 25px rgba(34, 197, 94, 1)); }
+        }
+
+        /* 3D Rotating Logo Container */
+        .logo-ring-outer {
+            animation: rotateClockwise 25s linear infinite;
+        }
+        .logo-ring-inner {
+            animation: rotateCounterClockwise 18s linear infinite;
+        }
+
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotateCounterClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        /* Lifeline Buttons */
+        .lifeline-btn {
+            width: 60px;
+            height: 44px;
+            clip-path: ellipse(50% 50% at 50% 50%);
+            background: radial-gradient(circle at center, #1e3a8a 0%, #020617 100%);
+            border: 2px solid #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+            transition: all 0.25s ease;
+        }
+        .lifeline-btn:hover:not(.used) {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.8);
+            background: radial-gradient(circle at center, #2563eb 0%, #091334 100%);
+        }
+        .lifeline-btn.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: grayscale(1);
+            position: relative;
+        }
+        .lifeline-btn.used::after {
+            content: '❌';
+            position: absolute;
+            font-size: 1.2rem;
+        }
+
+        /* Points Ladder Styling */
+        .ladder-step {
+            transition: all 0.2s ease;
+        }
+        .ladder-step.active {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.95) 0%, rgba(217, 119, 6, 0.95) 100%);
+            color: #000000 !important;
+            font-weight: 900;
+            border-radius: 4px;
+            transform: scale(1.04);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.8);
+        }
+        .ladder-step.safe {
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .ladder-step.normal {
+            color: #f59e0b;
+        }
+
+        /* Phone Call Pulsing Effect */
+        @keyframes phonePulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(6, 182, 212, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+        .phone-calling-ring {
+            animation: phonePulse 1.5s infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-screen w-screen relative flex flex-col justify-between overflow-hidden bg-slate-950">
+    <!-- ECRAN INTRO & DEBLOCARE AUDIO TV -->
+    <div id="intro-screen" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center">
+        
+        <!-- PASUL 1: Start Transmisie (Deblocare Audio Browser) -->
+        <div id="intro-step-1" class="flex flex-col items-center max-w-lg">
+            <div class="w-24 h-24 mb-6 rounded-full bg-amber-500/10 border-2 border-amber-500 flex items-center justify-center text-amber-400 text-4xl shadow-[0_0_30px_rgba(245,158,11,0.5)] animate-pulse">
+                <i class="fa-solid fa-tv"></i>
+            </div>
+            <h1 class="font-cinzel text-2xl sm:text-4xl font-black text-white mb-2 tracking-wider">
+                VREI SĂ FII <span class="text-amber-400">CERCETAȘ?</span>
+            </h1>
+            <p class="text-cyan-300 text-xs sm:text-sm font-semibold uppercase tracking-widest mb-8">Ediție TV Oficială</p>
+            
+            <button onclick="playStudioIntro()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-black py-4 px-8 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.6)] text-sm sm:text-base tracking-wider uppercase transition-all transform hover:scale-105 flex items-center gap-3 cursor-pointer">
+                <i class="fa-solid fa-play text-lg"></i>
+                <span>Începe Transmisia</span>
+            </button>
+        </div>
+
+        <!-- PASUL 2: Genericul Emisiunii & Animația TV Studio -->
+        <div id="intro-step-2" class="hidden flex flex-col items-center max-w-2xl w-full">
+            
+            <!-- Siglă Animată pentru Intro -->
+            <div class="relative w-48 h-48 sm:w-64 sm:h-64 my-6 flex items-center justify-center">
+                <div class="logo-ring-outer absolute inset-0 rounded-full border-4 border-dashed border-amber-400/80 shadow-[0_0_50px_rgba(245,158,11,0.8)]"></div>
+                <div class="logo-ring-inner absolute inset-3 rounded-full border-2 border-cyan-400"></div>
+                
+                <div class="w-36 h-36 sm:w-48 sm:h-48 rounded-full bg-slate-900 border-4 border-amber-500 flex flex-col items-center justify-center p-4 shadow-2xl relative overflow-hidden">
+                    <svg class="absolute w-32 h-32 opacity-20 text-amber-400 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.5 8.5L21 9L16 13.5L17.5 20L12 16.5L6.5 20L8 13.5L3 9L9.5 8.5L12 2Z"/>
+                    </svg>
+                    <span class="text-amber-400 text-[10px] font-extrabold uppercase tracking-widest z-10 mb-1">Studio TV</span>
+                    <h2 class="font-cinzel text-lg sm:text-2xl font-black text-white z-10 drop-shadow-md leading-tight">
+                        CERCETAȘ
+                    </h2>
+                    <span class="text-cyan-300 text-[11px] font-extrabold tracking-wider z-10 mt-1">DIRECT</span>
+                </div>
+            </div>
+
+            <!-- Stare Generat/Reflectoare -->
+            <div class="space-y-2 mb-8">
+                <div class="inline-flex items-center gap-2 bg-red-600/30 border border-red-500 text-red-300 px-4 py-1 rounded-full text-xs font-extrabold tracking-widest uppercase animate-pulse">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                    <span>Genericul Emisiunii în Desfășurare</span>
+                </div>
+                <h3 class="text-white text-base sm:text-xl font-bold tracking-wide">
+                    Concurentul este pe poziție. Reflectoarele sunt pregătite!
+                </h3>
+            </div>
+
+            <!-- BUTONUL FINAL: "ARATĂ PRIMA ÎNTREBARE" -->
+            <button onclick="startFirstQuestion()" class="bg-gradient-to-r from-cyan-500 via-blue-600 to-cyan-500 hover:from-cyan-400 hover:to-blue-500 text-white font-black py-4 px-10 rounded-2xl shadow-[0_0_35px_rgba(6,182,212,0.8)] border border-cyan-300/50 text-sm sm:text-lg tracking-wider uppercase transition-all transform hover:scale-105 flex items-center gap-3 cursor-pointer animate-pulse">
+                <i class="fa-solid fa-circle-play text-xl text-amber-300"></i>
+                <span>Arată Prima Întrebare</span>
+            </button>
+        </div>
+
+    </div>
+    <!-- TV Studio Dynamic Background Canvas -->
+    <canvas id="studio-canvas"></canvas>
+
+    <!-- KANAL D TV Watermark (Top-Right) -->
+    <div class="absolute top-4 right-4 z-30 flex flex-col items-end pointer-events-none select-none">
+        <div class="bg-black/85 backdrop-blur-md text-white font-extrabold text-sm md:text-base px-3 py-1 border-b-4 border-red-600 shadow-[0_0_15px_rgba(220,38,38,0.7)] tracking-wider rounded-t-md flex items-center gap-2">
+            <span>KANAL D</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping"></span>
+        </div>
+        <span class="text-[10px] text-gray-400 tracking-widest uppercase font-bold mt-0.5">HD • DIRECT</span>
+    </div>
+
+    <!-- MAIN GAME DISPLAY (Header, Logo, Questions, Sidebar) -->
+    <div class="flex-1 flex flex-col md:flex-row justify-between relative z-10 h-full max-w-full">
+        
+        <!-- CENTER & LEFT GAMEPLAY AREA -->
+        <div class="flex-1 flex flex-col justify-between relative h-full p-3 sm:p-5 md:pr-4">
+            
+            <!-- TOP HEADER: Lifelines & Status -->
+            <div class="flex justify-between items-center w-full z-20">
+                <!-- Lifelines Group -->
+                <div class="flex gap-2 sm:gap-3 items-center bg-slate-900/80 p-2 rounded-full border border-amber-500/40 backdrop-blur-md shadow-xl">
+                    <div id="life-5050" class="lifeline-btn" title="50:50 - Elimină două răspunsuri greșite" onclick="useLifeline('5050')">
+                        <span class="text-amber-400 font-extrabold text-xs sm:text-sm">50:50</span>
+                    </div>
+                    <div id="life-phone" class="lifeline-btn" title="Sună un Cercetaș (30 Secunde)" onclick="useLifeline('phone')">
+                        <i class="fa-solid fa-phone text-amber-400 text-base"></i>
+                    </div>
+                    <div id="life-public" class="lifeline-btn" title="Sfatul Patrulei (Orientare Lumini Sală)" onclick="useLifeline('public')">
+                        <i class="fa-solid fa-users text-amber-400 text-base"></i>
+                    </div>
+                </div>
+
+                <!-- Audience Camera Mode Badge Indicator -->
+                <div id="audience-camera-badge" class="hidden flex items-center gap-2 bg-red-950/90 border-2 border-red-500/80 px-3.5 py-1.5 rounded-full text-red-200 font-extrabold text-xs tracking-wider shadow-[0_0_20px_rgba(239,68,68,0.7)] animate-pulse">
+                    <i class="fa-solid fa-video text-red-500 animate-spin"></i>
+                    <span>CAMERA ORIENTATĂ CĂTRE SALĂ</span>
+                </div>
+
+                <!-- Current Level Badge -->
+                <div class="flex items-center gap-2 bg-blue-950/80 border border-cyan-500/40 px-3.5 py-1.5 rounded-full text-cyan-300 font-bold text-xs sm:text-sm tracking-wide shadow-lg">
+                    <i class="fa-solid fa-layer-group text-amber-400"></i>
+                    <span class="hidden sm:inline">ÎNTREBAREA</span>
+                    <span id="level-indicator-badge" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-full font-black text-sm">1 / 15</span>
+                </div>
+            </div>
+
+            <!-- CENTER LOGO: "VREI SĂ FII CERCETAȘ?" -->
+            <div class="flex-1 flex flex-col items-center justify-center my-1 relative z-10">
+                
+                <div class="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 flex items-center justify-center">
+                    <!-- Rotating Rings -->
+                    <div class="logo-ring-outer absolute inset-0 rounded-full border-2 border-dashed border-amber-400/70 shadow-[0_0_35px_rgba(245,158,11,0.4)]"></div>
+                    <div class="logo-ring-inner absolute inset-3 rounded-full border-2 border-cyan-400/50"></div>
+                    
+                    <!-- Center Shield -->
+                    <div class="w-36 h-36 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full bg-radial from-blue-900 via-slate-950 to-black border-4 border-amber-500 flex flex-col items-center justify-center text-center p-2 sm:p-4 shadow-[0_0_50px_rgba(29,78,216,0.9)] relative overflow-hidden">
+                        
+                        <!-- Scout Emblem SVG -->
+                        <svg class="absolute w-28 h-28 sm:w-36 sm:h-36 opacity-20 text-amber-400 pointer-events-none" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2L14.5 8.5L21 9L16 13.5L17.5 20L12 16.5L6.5 20L8 13.5L3 9L9.5 8.5L12 2Z"/>
+                        </svg>
+
+                        <span class="text-amber-400 font-extrabold text-[9px] sm:text-[10px] tracking-widest uppercase mb-0.5">Concurs Național</span>
+                        <h1 class="font-cinzel text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-wider drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+                            VREI SĂ FII<br>
+                            <span class="text-amber-400 text-lg sm:text-2xl md:text-3xl drop-shadow-[0_0_15px_rgba(245,158,11,0.9)]">CERCETAȘ?</span>
+                        </h1>
+                        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent my-1"></div>
+                        <span id="prize-subtitle" class="text-cyan-300 font-extrabold text-[9px] sm:text-[11px] tracking-wider">1.000.000 PUNCTE</span>
+                    </div>
+                </div>
+
+                <!-- Game Over / Victory Overlay Message Box -->
+                <div id="game-message-box" class="hidden absolute inset-x-2 md:inset-x-8 z-40 bg-slate-950/95 border-2 border-amber-500 p-6 rounded-2xl text-center shadow-[0_0_50px_rgba(0,0,0,0.95)] backdrop-blur-xl">
+                    <!-- Filled dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- BOTTOM QUESTION & ANSWERS AREA -->
+            <div class="w-full max-w-4xl mx-auto z-20 space-y-2 sm:space-y-3">
+                
+                <!-- Question Box -->
+                <div class="hex-outer w-full shadow-[0_0_25px_rgba(0,0,0,0.85)]">
+                    <div class="hex-inner min-h-[64px] sm:min-h-[75px] justify-center text-center">
+                        <p id="question-text" class="text-sm sm:text-base md:text-lg font-bold leading-snug text-white max-w-3xl">
+                            Se încarcă întrebarea...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Answers Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-2.5">
+                    <div id="answer-box-0" class="hex-outer answer-hex cursor-pointer" onclick="selectAnswer(0)">
+                        <div class="hex-inner">
+                            <span class="text-amber-400 font-black text-sm sm:text-base mr-2 min-w-[20px]">A:</span>
+                            <span id="ans-text-0" class="text-xs sm:text-sm font-semibold w-full text-slate-100"></span>
+                        </div>
+                    </div>
+
+                    <div id="answer-box-1" class="hex-outer answer-hex cursor-pointer" onclick="selectAnswer(1)">
+                        <div class="hex-inner">
+                            <span class="text-amber-400 font-black text-sm sm:text-base mr-2 min-w-[20px]">B:</span>
+                            <span id="ans-text-1" class="text-xs sm:text-sm font-semibold w-full text-slate-100"></span>
+                        </div>
+                    </div>
+
+                    <div id="answer-box-2" class="hex-outer answer-hex cursor-pointer" onclick="selectAnswer(2)">
+                        <div class="hex-inner">
+                            <span class="text-amber-400 font-black text-sm sm:text-base mr-2 min-w-[20px]">C:</span>
+                            <span id="ans-text-2" class="text-xs sm:text-sm font-semibold w-full text-slate-100"></span>
+                        </div>
+                    </div>
+
+                    <div id="answer-box-3" class="hex-outer answer-hex cursor-pointer" onclick="selectAnswer(3)">
+                        <div class="hex-inner">
+                            <span class="text-amber-400 font-black text-sm sm:text-base mr-2 min-w-[20px]">D:</span>
+                            <span id="ans-text-3" class="text-xs sm:text-sm font-semibold w-full text-slate-100"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDEBAR: Points Ladder (15 Steps) -->
+        <div class="hidden md:flex w-64 bg-slate-950/90 border-l border-amber-500/30 flex-col justify-center px-4 py-2 z-20 backdrop-blur-md shadow-[-10px_0_30px_rgba(0,0,0,0.8)]">
+            <div class="text-center mb-2 pb-2 border-b border-slate-800">
+                <span class="text-xs text-amber-400 font-extrabold uppercase tracking-widest block">Scara Punctelor</span>
+                <span class="text-[10px] text-gray-400 font-semibold">Praguri Garantate: 5 & 10</span>
+            </div>
+            
+            <ul id="points-ladder" class="flex flex-col-reverse space-y-reverse space-y-0.5 text-xs font-mono select-none">
+                <!-- Dynamically populated by JS -->
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- PERMANENTLY DOCKED BOTTOM HOST PANEL (RESTRUCTURED EXCLUSIVELY TO 3 BUTTONS) -->
+    <div id="host-bottom-bar" class="w-full relative z-50 bg-slate-950/95 border-t-2 border-amber-500/80 px-4 py-2.5 shadow-[0_-10px_35px_rgba(0,0,0,0.9)] backdrop-blur-md flex justify-center items-center">
+        
+        <div class="flex flex-wrap items-center justify-center gap-3 md:gap-6 w-full max-w-5xl">
+            
+            <div class="hidden lg:flex items-center gap-2 text-amber-400 font-extrabold text-xs tracking-wider uppercase border-r border-slate-800 pr-4">
+                <i class="fa-solid fa-headset text-cyan-400 text-sm"></i>
+                <span>Panou Prezentator</span>
+            </div>
+
+            <!-- BUTTON 1: VERIFICĂ RĂSPUNSUL -->
+            <button id="btn-host-verify" onclick="revealAnswer()" disabled class="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-extrabold text-xs sm:text-sm py-2 px-5 rounded-xl shadow-lg border border-amber-300/40 transition-all duration-200 flex items-center gap-2 opacity-50 cursor-not-allowed">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>VERIFICĂ RĂSPUNSUL</span>
+            </button>
+
+            <!-- BUTTON 2: URMĂTOAREA ÎNTREBARE -->
+            <button id="btn-host-next" onclick="nextQuestion()" disabled class="bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-black font-extrabold text-xs sm:text-sm py-2 px-5 rounded-xl shadow-lg border border-cyan-300/40 transition-all duration-200 flex items-center gap-2 opacity-50 cursor-not-allowed">
+                <i class="fa-solid fa-forward"></i>
+                <span>URMĂTOAREA ÎNTREBARE</span>
+            </button>
+
+            <!-- BUTTON 3: EDITEAZĂ ÎNTREBĂRILE -->
+            <button id="btn-host-edit" onclick="toggleAdminModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs sm:text-sm py-2 px-5 rounded-xl shadow-lg border border-amber-500/30 transition-all duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-cyan-400"></i>
+                <span>EDITEAZĂ ÎNTREBĂRILE</span>
+            </button>
+
+        </div>
+    </div>
+    <!-- MODAL: SUNĂ UN CERCETAȘ (30s Call UI) -->
+    <div id="modal-phone" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="bg-gradient-to-b from-slate-900 via-slate-950 to-black border-2 border-cyan-500 p-6 md:p-8 rounded-3xl max-w-md w-full text-center shadow-[0_0_60px_rgba(6,182,212,0.4)] relative">
+            
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-cyan-950 border-2 border-cyan-400 flex items-center justify-center phone-calling-ring text-cyan-300 text-3xl">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-amber-400 mb-1">Apel Telefonic în Desfășură</h3>
+            <p id="phone-status-label" class="text-xs text-cyan-300 tracking-wider font-semibold uppercase mb-6">Conexiune activă cu Cercetașul...</p>
+            
+            <!-- BIG TIMER DISPLAY -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl py-4 my-2 shadow-inner">
+                <div id="phone-timer-display" class="text-6xl font-black font-mono text-cyan-400 tracking-wider drop-shadow-[0_0_15px_rgba(6,182,212,0.8)]">
+                    30
+                </div>
+                <span class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Secunde Rămase</span>
+            </div>
+
+            <!-- CONTROLS: Pause, Reset, End Call -->
+            <div class="grid grid-cols-3 gap-3 mt-6">
+                <button id="btn-phone-pause" onclick="togglePhoneTimer()" class="bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold py-2.5 px-2 rounded-xl text-xs border border-amber-500/30 flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-pause text-base"></i>
+                    <span id="lbl-phone-pause">Pauză</span>
+                </button>
+                
+                <button onclick="resetPhoneTimer()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold py-2.5 px-2 rounded-xl text-xs border border-cyan-500/30 flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-rotate-left text-base"></i>
+                    <span>Restart 30s</span>
+                </button>
+
+                <button onclick="closeModal('modal-phone')" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-2 rounded-xl text-xs flex flex-col items-center gap-1 shadow-lg">
+                    <i class="fa-solid fa-phone-slash text-base"></i>
+                    <span>Închide</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SFATUL PATRULEI - MODO ORIENTAT SPRE SALĂ (NO PERCENTAGES / CHARTS) -->
+    <div id="modal-public" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center p-4">
+        <div class="bg-gradient-to-b from-slate-900 via-slate-950 to-black border-2 border-amber-500 p-6 md:p-8 rounded-3xl max-w-md w-full text-center shadow-[0_0_60px_rgba(245,158,11,0.5)] relative">
+            
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-amber-950 border-2 border-amber-400 flex items-center justify-center text-amber-400 text-3xl shadow-[0_0_20px_rgba(245,158,11,0.6)]">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-amber-400 mb-2">SFATUL PATRULEI</h3>
+            <div class="bg-red-950/80 border border-red-500/50 p-3 rounded-xl mb-4">
+                <span class="text-red-300 font-bold text-xs uppercase tracking-wider block mb-1">
+                    <i class="fa-solid fa-video mr-1"></i> Lumini & Reflectoare Sală Active
+                </span>
+                <p class="text-xs text-gray-200 leading-relaxed">
+                    Prezentatorul consultă direct publicul din studio pentru această întrebare.
+                </p>
+            </div>
+
+            <button onclick="closeAudienceMode()" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 px-6 rounded-xl text-sm w-full shadow-lg">
+                Revin la Scenă
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: ADMIN QUESTION JSON EDITOR -->
+    <div id="modal-admin" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-500/50 p-6 rounded-2xl max-w-3xl w-full flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
+                <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Editor Întrebări (JSON)</span>
+                </h3>
+                <button onclick="toggleAdminModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+
+            <p class="text-xs text-gray-300 mb-2">Editați sau lipiți lista de întrebări în format JSON (câmpul <code>correct</code> specifică indexul 0=A, 1=B, 2=C, 3=D):</p>
+            
+            <textarea id="json-textarea" class="w-full flex-1 min-h-[220px] bg-slate-950 text-emerald-400 font-mono text-xs p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-amber-500 mb-4"></textarea>
+
+            <div class="flex flex-wrap justify-between gap-3 pt-2">
+                <button onclick="resetDefaultQuestions()" class="bg-slate-800 hover:bg-slate-700 text-gray-300 font-bold py-2 px-4 rounded-lg text-xs">
+                    🔄 Resetează la Default
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="toggleAdminModal()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg text-xs">
+                        Anulează
+                    </button>
+                    <button onclick="applyCustomQuestions()" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-2 px-5 rounded-lg text-xs">
+                        💾 Salvează și Reîncepe
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. SECȚIUNE DEDICATĂ PENTRU SUNETE CUSTOM (CUSTOM AUDIO FILES HOOKS)
+           --------------------------------------------------------------------------
+           Aici puteți adăuga fișiere .mp3 locale sau URL-uri web pentru fiecare acțiune.
+           Dacă o cale este lăsată goală (""), sistemul va folosi automat sintetizatorul 
+           intern Web Audio API (fără dependențe externe).
+           Exemplu: intro: "audio/intro.mp3",
+           ========================================================================== */
+        const CUSTOM_SOUNDS = {
+            intro: "sounds/intro.mp3",             // Cale MP3 pentru genericul de început
+            questionLoad: "sounds/play.mp3",      // Cale MP3 pentru încărcarea întrebării / fundal
+            selectOption: "",      // Cale MP3 pentru alegerea/blocarea unei opțiuni
+            confirmAnswer: "sounds/suspans.mp3",     // Cale MP3 pentru sunetul de suspans la verificare
+            correctAnswer: "sounds/corect.mp3",     // Cale MP3 pentru fanfara de răspuns corect
+            wrongAnswer: "sounds/wrong.mp3",       // Cale MP3 pentru buzerul de răspuns greșit
+            lifeline5050: "",      // Cale MP3 pentru varianta 50:50
+            lifelinePhone: "",     // Cale MP3 pentru sunetul de telefon/apel
+            lifelineAudience: "",  // Cale MP3 pentru comutare reflectoare spre sală
+            winGame: "sounds/jackpot.mp3"            // Cale MP3 pentru victoria finală 1.000.000 puncte
+        };
+
+        /* ==========================================================================
+           2. WEB AUDIO API SYNTHESIZER (FALLBACK SOUND ENGINE & LOOP CONTROLLER)
+           ========================================================================== */
+        class AudioSynthEngine {
+            constructor() {
+                this.ctx = null;
+                this.tickingInterval = null;
+                this.ringInterval = null;
+                this.suspenseInterval = null;
+                this.activeAudio = null; // Păstrează referința către fișierul audio MP3 activ
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            // OPREȘTE TOATE SUNETELE ACTIVE (MP3 SAU SINTETIZATOR)
+            stopAll() {
+                if (this.activeAudio) {
+                    this.activeAudio.pause();
+                    this.activeAudio.currentTime = 0;
+                    this.activeAudio = null;
+                }
+                this.stopPhoneRinging();
+                this.stopTicking();
+                this.stopSuspense();
+            }
+
+            // PORNEȘTE SUNETUL DE SUSPANS ÎN LOOP (BUCLĂ)
+            startSuspense() {
+                this.stopAll(); // Oprim orice sunet de fundal mai întâi
+
+                if (CUSTOM_SOUNDS.confirmAnswer && CUSTOM_SOUNDS.confirmAnswer.trim() !== "") {
+                    try {
+                        this.activeAudio = new Audio(CUSTOM_SOUNDS.confirmAnswer);
+                        this.activeAudio.loop = true; // Setează fișierul MP3 în buclă
+                        this.activeAudio.play().catch(() => this.playSynthSuspenseLoop());
+                    } catch(e) {
+                        this.playSynthSuspenseLoop();
+                    }
+                } else {
+                    this.playSynthSuspenseLoop();
+                }
+            }
+
+            // Oprește bucla de suspans
+            stopSuspense() {
+                if (this.suspenseInterval) {
+                    clearInterval(this.suspenseInterval);
+                    this.suspenseInterval = null;
+                }
+                if (this.activeAudio && this.activeAudio.loop) {
+                    this.activeAudio.pause();
+                    this.activeAudio.currentTime = 0;
+                    this.activeAudio = null;
+                }
+            }
+
+            // Sintetizator intern de suspans (Pulse/Bătaie de inimă) dacă nu există MP3
+            playSynthSuspenseLoop() {
+                this.init();
+                this.stopSuspense();
+
+                const playPulse = () => {
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(55, now);
+                    osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
+
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                };
+
+                playPulse();
+                this.suspenseInterval = setInterval(playPulse, 800);
+            }
+
+            playSynth(type) {
+                this.init();
+                const now = this.ctx.currentTime;
+
+                switch (type) {
+                    case 'questionLoad':
+                    case 'intro': {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(65, now);
+                        osc.frequency.exponentialRampToValueAtTime(73, now + 2.5);
+
+                        gain.gain.setValueAtTime(0.12, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 2.5);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start();
+                        osc.stop(now + 2.5);
+                        break;
+                    }
+
+                    case 'selectOption': {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(240, now);
+                        osc.frequency.exponentialRampToValueAtTime(120, now + 0.25);
+
+                        gain.gain.setValueAtTime(0.25, now);
+                        gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start();
+                        osc.stop(now + 0.25);
+                        break;
+                    }
+
+                    case 'correctAnswer': {
+                        const notes = [261.63, 329.63, 392.00, 523.25];
+                        notes.forEach((freq, idx) => {
+                            const osc = this.ctx.createOscillator();
+                            const gain = this.ctx.createGain();
+                            osc.type = 'sine';
+                            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+
+                            gain.gain.setValueAtTime(0.2, now + idx * 0.12);
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.6);
+
+                            osc.connect(gain);
+                            gain.connect(this.ctx.destination);
+                            osc.start(now + idx * 0.12);
+                            osc.stop(now + idx * 0.12 + 0.6);
+                        });
+                        break;
+                    }
+
+                    case 'wrongAnswer': {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(130, now);
+                        osc.frequency.linearRampToValueAtTime(60, now + 0.8);
+
+                        gain.gain.setValueAtTime(0.25, now);
+                        gain.gain.linearRampToValueAtTime(0.01, now + 0.8);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start();
+                        osc.stop(now + 0.8);
+                        break;
+                    }
+
+                    case 'lifelineAudience': {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(180, now);
+                        osc.frequency.exponentialRampToValueAtTime(450, now + 1.2);
+
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start();
+                        osc.stop(now + 1.2);
+                        break;
+                    }
+
+                    case 'winGame': {
+                        const freqs = [392, 523.25, 659.25, 783.99, 1046.50];
+                        freqs.forEach((f, i) => {
+                            const osc = this.ctx.createOscillator();
+                            const gain = this.ctx.createGain();
+                            osc.frequency.setValueAtTime(f, now + i * 0.15);
+                            gain.gain.setValueAtTime(0.25, now + i * 0.15);
+                            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.8);
+                            osc.connect(gain);
+                            gain.connect(this.ctx.destination);
+                            osc.start(now + i * 0.15);
+                            osc.stop(now + i * 0.15 + 0.8);
+                        });
+                        break;
+                    }
+                }
+            }
+
+            startPhoneRinging() {
+                this.init();
+                this.stopPhoneRinging();
+                
+                const playRingTone = () => {
+                    const now = this.ctx.currentTime;
+                    const osc1 = this.ctx.createOscillator();
+                    const osc2 = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+
+                    osc1.frequency.setValueAtTime(440, now);
+                    osc2.frequency.setValueAtTime(480, now);
+
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 1.2);
+
+                    osc1.connect(gain);
+                    osc2.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc1.start();
+                    osc2.start();
+                    osc1.stop(now + 1.2);
+                    osc2.stop(now + 1.2);
+                };
+
+                playRingTone();
+                this.ringInterval = setInterval(playRingTone, 3000);
+            }
+
+            stopPhoneRinging() {
+                if (this.ringInterval) {
+                    clearInterval(this.ringInterval);
+                    this.ringInterval = null;
+                }
+            }
+
+            startTicking() {
+                this.init();
+                this.stopTicking();
+                
+                this.tickingInterval = setInterval(() => {
+                    const now = this.ctx.currentTime;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(850, now);
+                    
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(now + 0.06);
+                }, 1000);
+            }
+
+            stopTicking() {
+                if (this.tickingInterval) {
+                    clearInterval(this.tickingInterval);
+                    this.tickingInterval = null;
+                }
+            }
+        }
+
+        const synthEngine = new AudioSynthEngine();
+
+        function triggerAudio(soundKey) {
+            // Oprim sunetul activ înainte de a reda un alt sunet
+            if (synthEngine.activeAudio) {
+                synthEngine.activeAudio.pause();
+                synthEngine.activeAudio.currentTime = 0;
+                synthEngine.activeAudio = null;
+            }
+
+            if (CUSTOM_SOUNDS[soundKey] && CUSTOM_SOUNDS[soundKey].trim() !== "") {
+                try {
+                    const audio = new Audio(CUSTOM_SOUNDS[soundKey]);
+                    synthEngine.activeAudio = audio;
+                    audio.play().catch(() => synthEngine.playSynth(soundKey));
+                } catch(e) {
+                    synthEngine.playSynth(soundKey);
+                }
+            } else {
+                synthEngine.playSynth(soundKey);
+            }
+        }
+        /* ==========================================================================
+           3. DYNAMIC TV STUDIO BACKGROUND CANVAS
+           ========================================================================== */
+        const canvas = document.getElementById('studio-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let beamAngle = 0;
+        let spotlightTargetMode = 'stage'; // 'stage' or 'audience'
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2 + 1,
+                speedY: -(Math.random() * 0.6 + 0.2),
+                alpha: Math.random() * 0.7 + 0.3
+            });
+        }
+
+        function drawStudioBackground() {
+            ctx.clearRect(0, 0, width, height);
+
+            const bgGradient = ctx.createRadialGradient(width / 2, height / 2, 40, width / 2, height / 2, Math.max(width, height) / 1.1);
+            bgGradient.addColorStop(0, spotlightTargetMode === 'audience' ? '#1e0505' : '#0a1538');
+            bgGradient.addColorStop(0.6, spotlightTargetMode === 'audience' ? '#0a0202' : '#03071e');
+            bgGradient.addColorStop(1, '#020617');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, width, height);
+
+            beamAngle += 0.003;
+            ctx.save();
+            
+            if (spotlightTargetMode === 'audience') {
+                // RED/GOLD AUDIENCE LIGHTS ORIENTED TOWARDS SPECTATORS
+                ctx.translate(width / 2, -100);
+                for (let i = -3; i <= 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo((i * 220) + Math.sin(beamAngle * 2) * 80, height);
+                    ctx.lineTo((i * 220) + 120 + Math.sin(beamAngle * 2) * 80, height);
+                    ctx.closePath();
+
+                    const beamGrd = ctx.createLinearGradient(0, 0, 0, height);
+                    beamGrd.addColorStop(0, 'rgba(239, 68, 68, 0.35)');
+                    beamGrd.addColorStop(0.8, 'rgba(245, 158, 11, 0.2)');
+                    beamGrd.addColorStop(1, 'transparent');
+                    ctx.fillStyle = beamGrd;
+                    ctx.fill();
+                }
+            } else {
+                // NORMAL BLUE/GOLD STAGE LIGHTS
+                ctx.translate(width / 2, height / 2);
+                for (let i = 0; i < 6; i++) {
+                    ctx.rotate((Math.PI / 3));
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(Math.cos(beamAngle) * width, Math.sin(beamAngle) * height - 150);
+                    ctx.lineTo(Math.cos(beamAngle) * width + 250, Math.sin(beamAngle) * height + 150);
+                    ctx.closePath();
+                    
+                    const beamGrd = ctx.createRadialGradient(0, 0, 100, 0, 0, width / 1.5);
+                    beamGrd.addColorStop(0, 'rgba(29, 78, 216, 0.18)');
+                    beamGrd.addColorStop(0.8, 'rgba(6, 182, 212, 0.04)');
+                    beamGrd.addColorStop(1, 'transparent');
+                    ctx.fillStyle = beamGrd;
+                    ctx.fill();
+                }
+            }
+            ctx.restore();
+
+            // Floating Particles
+            ctx.fillStyle = spotlightTargetMode === 'audience' ? '#f87171' : '#f59e0b';
+            particles.forEach(p => {
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                p.y += p.speedY;
+                if (p.y < 0) {
+                    p.y = height + 10;
+                    p.x = Math.random() * width;
+                }
+            });
+            ctx.globalAlpha = 1.0;
+
+            requestAnimationFrame(drawStudioBackground);
+        }
+        drawStudioBackground();
+
+        /* ==========================================================================
+           4. GAME DATA & QUESTIONS
+           ========================================================================== */
+        const pointLevels = [
+            { amount: "100 Puncte", safe: false },
+            { amount: "200 Puncte", safe: false },
+            { amount: "300 Puncte", safe: false },
+            { amount: "500 Puncte", safe: false },
+            { amount: "1.000 Puncte", safe: true },  // Safe Haven 1
+            { amount: "2.000 Puncte", safe: false },
+            { amount: "4.000 Puncte", safe: false },
+            { amount: "8.000 Puncte", safe: false },
+            { amount: "16.000 Puncte", safe: false },
+            { amount: "32.000 Puncte", safe: true }, // Safe Haven 2
+            { amount: "64.000 Puncte", safe: false },
+            { amount: "125.000 Puncte", safe: false },
+            { amount: "250.000 Puncte", safe: false },
+            { amount: "500.000 Puncte", safe: false },
+            { amount: "1.000.000 PUNCTE", safe: true }
+        ];
+
+        const defaultQuestions = [
+            { question: "Care este deviza cercetașilor din întreaga lume?", answers: ["Fii Pregătit!", "Gata Oricând!", "Totainte cu Curaj!", "Uniți în Diverstitate!"], correct: 1 },
+            { question: "Cine este fondatorul mișcării cercetășești mondiale (Scouting)?", answers: ["Baden-Powell", "Ernest Thompson Seton", "Ion Creangă", "Robert Koch"], correct: 0 },
+            { question: "Care este floarea simbolică ce apare pe emblema cercetașilor?", answers: ["Floarea de Colț", "Liliacul", "Fleur-de-lis (Crinul)", "Trandafirul"], correct: 2 },
+            { question: "Cum se numește nodul clasic folosit pentru unirea a două frânghii de grosimi egale?", answers: ["Nodul Cabestan", "Nodul Pescăresc", "Nodul Lat (Pătrat)", "Nodul Opt"], correct: 2 },
+            { question: "Ce reprezintă cele trei degete ridicate în salutul cercetășesc?", answers: ["Datoria față de Dumnezeu, Țară și Aproapele", "Pace, Onoare și Respect", "Trecut, Prezent și Viitor", "Curaj, Prietenie și Loialitate"], correct: 0 },
+            { question: "În ce an a avut loc primul campament cercetășesc pe insula Brownsea?", answers: ["1918", "1907", "1899", "1923"], correct: 1 },
+            { question: "Cum se numește unitatea mică de cercetași (4-8 membri) condusă de un Lider de Patrulă?", answers: ["Maniplu", "Echipă", "Patrulă", "Cetaș"], correct: 2 },
+            { question: "Care este instrumentul tradițional de orientare pe teren neamenajat?", answers: ["Astrometrul", "Sextantul", "Busola", "Telemetrul"], correct: 2 },
+            { question: "Cum se numește un adăpost improvizat rapid în pădure din crengi și foi de cort?", answers: ["Bivuac", "Cabană", "Refugiu alpin", "Buncăr"], correct: 0 },
+            { question: "Ce numim 'Jamboree' în lumea cercetășească?", answers: ["Un cântec de tabără", "O mare adunare/campament internațional", "Un tip de nod marinăresc", "Mâncarea la ceaun"], correct: 1 },
+            { question: "Care este codul internațional de salvare transmis cu lanterna sau fluierul?", answers: ["SOS (... --- ...)", "MAYDAY", "CQD", "HELP"], correct: 0 },
+            { question: "Ce constelație din emisfera nordică ne ajută să localizăm Steaua Polară?", answers: ["Orion", "Ursa Mare (Carul Mare)", "Cassiopeia", "Scorpionul"], correct: 1 },
+            { question: "Cum se numește ramura de vârstă a cercetașilor mici (7-10 ani)?", answers: ["Lupișori", "Temerari", "Exploratori", "Seniori"], correct: 0 },
+            { question: "Ce principiu spune: 'Lăsați lumea un pic mai bună decât...'?", answers: ["...cum ați găsit-o", "...cum ați visat-o", "...decât ceilalți", "...înainte de tabără"], correct: 0 },
+            { question: "Care este titlul maxim acordat unui cercetaș ce a parcurs toate etapele?", answers: ["Cercetaș Suprem", "Maestru al Pădurii", "Ghid Național", "Comandant de Onoare"], correct: 0 }
+        ];
+
+        let questions = [...defaultQuestions];
+        let currentLevel = 0;
+        let selectedIndex = null;
+        let gameState = 'waiting';
+
+        let lifelinesState = { '5050': true, 'phone': true, 'public': true };
+        
+        let phoneTimeLeft = 30;
+        let phoneTimerInterval = null;
+        let isPhonePaused = false;
+
+        /* ==========================================================================
+           5. CORE GAMEPLAY LOGIC
+           ========================================================================== */
+        const questionTextEl = document.getElementById('question-text');
+        const pointsLadderEl = document.getElementById('points-ladder');
+        const levelBadgeEl = document.getElementById('level-indicator-badge');
+        const gameMsgBox = document.getElementById('game-message-box');
+        const btnHostVerify = document.getElementById('btn-host-verify');
+        const btnHostNext = document.getElementById('btn-host-next');
+
+        function initGame() {
+
+            currentLevel = 0;
+            selectedIndex = null;
+            gameState = 'waiting';
+            lifelinesState = { '5050': true, 'phone': true, 'public': true };
+
+            document.querySelectorAll('.lifeline-btn').forEach(btn => btn.classList.remove('used'));
+            gameMsgBox.classList.add('hidden');
+            
+            renderLadder();
+            loadQuestion(currentLevel);
+        }
+
+        function renderLadder() {
+            pointsLadderEl.innerHTML = '';
+            for (let i = pointLevels.length - 1; i >= 0; i--) {
+                const li = document.createElement('li');
+                li.className = `ladder-step flex justify-between items-center px-3 py-1 text-xs ${pointLevels[i].safe ? 'safe font-bold' : 'normal'}`;
+                
+                if (i === currentLevel) {
+                    li.classList.add('active');
+                }
+
+                const numSpan = document.createElement('span');
+                numSpan.textContent = `${i + 1}.`;
+                numSpan.className = "w-5 opacity-75";
+
+                const valSpan = document.createElement('span');
+                valSpan.textContent = pointLevels[i].amount;
+
+                li.appendChild(numSpan);
+                li.appendChild(valSpan);
+                pointsLadderEl.appendChild(li);
+            }
+
+            levelBadgeEl.textContent = `${currentLevel + 1} / 15`;
+        }
+
+        function loadQuestion(index) {
+            if (index >= questions.length) {
+                gameWon();
+                return;
+            }
+
+            triggerAudio('questionLoad');
+
+            const q = questions[index];
+            questionTextEl.textContent = q.question;
+
+            for (let i = 0; i < 4; i++) {
+                const box = document.getElementById(`answer-box-${i}`);
+                const text = document.getElementById(`ans-text-${i}`);
+
+                box.className = 'hex-outer answer-hex cursor-pointer';
+                text.textContent = q.answers[i];
+                box.style.visibility = 'visible';
+            }
+
+            gameState = 'waiting';
+            selectedIndex = null;
+
+            // Host buttons update
+            setHostButtonState(btnHostVerify, false);
+            setHostButtonState(btnHostNext, false);
+        }
+
+        function selectAnswer(index) {
+            if (gameState !== 'waiting') return;
+
+            selectedIndex = index;
+            gameState = 'locked';
+	    synthEngine.startSuspense();
+
+            for (let i = 0; i < 4; i++) {
+                const box = document.getElementById(`answer-box-${i}`);
+                if (i === index) {
+                    box.classList.add('state-locked');
+                } else {
+                    box.classList.remove('state-locked', 'state-correct', 'state-wrong');
+                }
+            }
+
+            // Enable host verify button
+            setHostButtonState(btnHostVerify, true);
+        }
+
+        function revealAnswer() {
+            if (gameState !== 'locked' || selectedIndex === null) return;
+
+            setHostButtonState(btnHostVerify, false);
+	    // Oprim suspansul înainte de a reda rezultatul
+	    synthEngine.stopSuspense();
+
+	    const q = questions[currentLevel];
+	    const correctIdx = q.correct;
+
+	    const correctBox = document.getElementById(`answer-box-${correctIdx}`);
+	    correctBox.classList.add('state-correct');
+
+	    if (selectedIndex === correctIdx) {
+	        triggerAudio('correctAnswer');
+	        gameState = 'revealed';
+	    
+	        if (currentLevel === 14) {
+	        	setTimeout(gameWon, 1800);
+	        } else {
+	        	setHostButtonState(btnHostNext, true);
+	        }
+	    } else {
+	        triggerAudio('wrongAnswer');
+	        gameState = 'gameover';
+	        const wrongBox = document.getElementById(`answer-box-${selectedIndex}`);
+	        wrongBox.classList.remove('state-locked');
+	        wrongBox.classList.add('state-wrong');
+
+	        setTimeout(gameOver, 2500);
+	    }
+        }
+
+        function nextQuestion() {
+            if (gameState !== 'revealed') return;
+            currentLevel++;
+            renderLadder();
+            loadQuestion(currentLevel);
+        }
+
+        function setHostButtonState(btn, enabled) {
+            if (enabled) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('animate-pulse');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.classList.remove('animate-pulse');
+            }
+        }
+
+        /* ==========================================================================
+           6. LIFELINES (50:50, PHONE, AUDIENCE WITHOUT PERCENTAGES)
+           ========================================================================== */
+        function useLifeline(type) {
+            if (gameState !== 'waiting' || !lifelinesState[type]) return;
+
+            lifelinesState[type] = false;
+            document.getElementById(`life-${type}`).classList.add('used');
+
+            if (type === '5050') {
+                triggerAudio('lifeline5050');
+                const q = questions[currentLevel];
+                let wrong = [0, 1, 2, 3].filter(i => i !== q.correct);
+                wrong.sort(() => 0.5 - Math.random());
+
+                document.getElementById(`answer-box-${wrong[0]}`).style.visibility = 'hidden';
+                document.getElementById(`answer-box-${wrong[1]}`).style.visibility = 'hidden';
+            } 
+            else if (type === 'phone') {
+                triggerAudio('lifelinePhone');
+                phoneTimeLeft = 30;
+                document.getElementById('phone-timer-display').textContent = '30';
+                triggerPhoneCall();
+            } 
+            else if (type === 'public') {
+                triggerAudio('lifelineAudience');
+                triggerAudienceOrientedMode();
+            }
+        }
+
+        /* SUNĂ UN CERCETAȘ TIMER LOGIC */
+        function triggerPhoneCall() {
+            openModal('modal-phone');
+            synthEngine.startPhoneRinging();
+            document.getElementById('phone-status-label').textContent = "Apelează Cercetașul...";
+
+            setTimeout(() => {
+                synthEngine.stopPhoneRinging();
+                synthEngine.startTicking();
+                document.getElementById('phone-status-label').textContent = "Conexiune activă — Vorbiți!";
+                startPhoneCountdown();
+            }, 2500);
+        }
+
+        function startPhoneCountdown() {
+            clearInterval(phoneTimerInterval);
+            isPhonePaused = false;
+            document.getElementById('lbl-phone-pause').textContent = "Pauză";
+
+            phoneTimerInterval = setInterval(() => {
+                if (!isPhonePaused) {
+                    phoneTimeLeft--;
+                    document.getElementById('phone-timer-display').textContent = phoneTimeLeft;
+
+                    if (phoneTimeLeft <= 0) {
+                        clearInterval(phoneTimerInterval);
+                        synthEngine.stopTicking();
+                        triggerAudio('wrongAnswer');
+                        document.getElementById('phone-status-label').textContent = "Timpul a expirat!";
+                    }
+                }
+            }, 1000);
+        }
+
+        function togglePhoneTimer() {
+            isPhonePaused = !isPhonePaused;
+            document.getElementById('lbl-phone-pause').textContent = isPhonePaused ? "Reia" : "Pauză";
+            if (isPhonePaused) {
+                synthEngine.stopTicking();
+            } else {
+                synthEngine.startTicking();
+            }
+        }
+
+        function resetPhoneTimer() {
+            phoneTimeLeft = 30;
+            document.getElementById('phone-timer-display').textContent = phoneTimeLeft;
+            synthEngine.startTicking();
+            startPhoneCountdown();
+        }
+
+        /* SFATUL PATRULEI - AUDIENCE LIGHTS MODE (NO PERCENTAGES) */
+        function triggerAudienceOrientedMode() {
+            spotlightTargetMode = 'audience';
+            document.getElementById('audience-camera-badge').classList.remove('hidden');
+            openModal('modal-public');
+        }
+
+        function closeAudienceMode() {
+            spotlightTargetMode = 'stage';
+            document.getElementById('audience-camera-badge').classList.add('hidden');
+            closeModal('modal-public');
+        }
+
+        /* ==========================================================================
+           7. GAME OVER, VICTORY & MODALS
+           ========================================================================== */
+        function gameOver() {
+            let winAmount = "0 Puncte";
+            if (currentLevel >= 9) winAmount = pointLevels[9].amount;
+            else if (currentLevel >= 4) winAmount = pointLevels[4].amount;
+
+            gameMsgBox.classList.remove('hidden');
+            gameMsgBox.innerHTML = `
+                <div class="text-red-500 text-2xl font-black mb-2">JOC ÎNCHEIAT</div>
+                <p class="text-gray-300 text-sm mb-4">Ați răspuns greșit! Rămâneți cu pragul obținut:</p>
+                <div class="text-3xl font-extrabold text-amber-400 mb-6">${winAmount}</div>
+                <button onclick="initGame()" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 px-8 rounded-xl shadow-lg">
+                    Încearcă din nou
+                </button>
+            `;
+        }
+
+        function gameWon() {
+            triggerAudio('winGame');
+            gameMsgBox.classList.remove('hidden');
+            gameMsgBox.innerHTML = `
+                <div class="text-cyan-400 text-3xl font-black mb-2 animate-bounce">FELICITĂRI SUPREME!</div>
+                <p class="text-white text-lg mb-2">Ați obținut titlul de:</p>
+                <div class="text-3xl md:text-4xl font-cinzel font-black text-amber-400 mb-4 drop-shadow-[0_0_15px_rgba(245,158,11,0.8)]">
+                    CERCETAȘ SUPREM
+                </div>
+                <div class="text-2xl font-bold text-white mb-6">1.000.000 PUNCTE</div>
+                <button onclick="initGame()" class="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold py-3 px-8 rounded-xl shadow-lg">
+                    Reîncepe Jocul
+                </button>
+            `;
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            if (id === 'modal-phone') {
+                synthEngine.stopPhoneRinging();
+                synthEngine.stopTicking();
+                clearInterval(phoneTimerInterval);
+            }
+        }
+
+        function toggleAdminModal() {
+            const modal = document.getElementById('modal-admin');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                document.getElementById('json-textarea').value = JSON.stringify(questions, null, 2);
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function resetDefaultQuestions() {
+            questions = [...defaultQuestions];
+            document.getElementById('json-textarea').value = JSON.stringify(questions, null, 2);
+        }
+
+        function applyCustomQuestions() {
+            try {
+                const parsed = JSON.parse(document.getElementById('json-textarea').value);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    questions = parsed;
+                    toggleAdminModal();
+                    initGame();
+                } else {
+                    alert('Format JSON invalid.');
+                }
+            } catch (e) {
+                alert('Eroare de parsare JSON.');
+            }
+        }
+	/* ==========================================================================
+	GESTIONARE INTRO TV & PORNIRE JOC
+	========================================================================== */
+
+	// 1. Apăsat pe "Începe Transmisia" -> Deblochează audio și pornește genericul
+	function playStudioIntro() {
+	    synthEngine.init(); // Deblochează AudioContext
+	    triggerAudio('intro'); // Redă sunetul/muzica de intro
+	    
+	    // Ascunde Pasul 1 și arată Pasul 2 (Animația TV & Butonul de start)
+	    document.getElementById('intro-step-1').classList.add('hidden');
+	    document.getElementById('intro-step-2').classList.remove('hidden');
+	}
+
+	// 2. Apăsat pe "Arată Prima Întrebare" -> Închide intro-ul și pornește jocul
+	function startFirstQuestion() {
+	    // Ascunde complet ecranul de intro
+	    document.getElementById('intro-screen').classList.add('hidden');
+	    
+	    // Inițializează jocul și încarcă prima întrebare
+	    initGame();
+	}
+
+	window.onload = () => {
+	    // Pregătim datele jocului în fundal, fără a încărca încă sunetul întrebării
+	    currentLevel = 0;
+	    selectedIndex = null;
+	    gameState = 'waiting';
+	    lifelinesState = { '5050': true, 'phone': true, 'public': true };
+	    renderLadder();
+	};
+    </script>
+</body>
+</html>
