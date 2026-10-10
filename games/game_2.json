@@ -1,0 +1,102 @@
+[
+  {
+    "question": "Ce înseamnă cuvântul „Jamboree” în dialectul indienilor americani?",
+    "answers": [
+      "Cântec de tabără",
+      "Mâncare tradițională",
+      "Întâlnire pașnică între triburi",
+      "Cort de mari dimensiuni"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "În ce an și unde a avut loc prima jamboree internațională?",
+    "answers": [
+      "1907 la Brownsea",
+      "1920 la Londra",
+      "1930 la Sibiu",
+      "1922 la Paris"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Câte țări au fost prezente la prima jamboree internațională din Londra?",
+    "answers": [
+      "10 țări",
+      "15 țări",
+      "22 de țări",
+      "50 de țări"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Care a fost primul mare comandant al Asociației „Cercetașii României” (legalizată în 1915)?",
+    "answers": [
+      "Regele Ferdinand",
+      "Principele Carol (viitorul rege)",
+      "Principele Nicolae",
+      "Generalul Eremia Grigorescu"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "La ce interval de timp se organizează o Jamboree Mondială?",
+    "answers": [
+      "În fiecare an",
+      "La 2 ani",
+      "La 4 ani",
+      "La 10 ani"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Cine a condus prima unitate de cercetași din România în anul 1913?",
+    "answers": [
+      "Robert Baden-Powell",
+      "Mircea Eliade",
+      "Colonelul Grigore Berindei",
+      "Grigore Antipa"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Ce eroină națională din Primul Război Mondial a făcut parte din rândul cercetașilor?",
+    "answers": [
+      "Regina Maria",
+      "Ecaterina Teodoroiu",
+      "Ana Ipătescu",
+      "Maria Rosetti"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Ce organizație mondială a fost fondată în anul 1922, România fiind printre membrii ei fondatori?",
+    "answers": [
+      "Crucea Roșie Internațională",
+      "NATO",
+      "Organizația Mondială a Mișcării Scout (OMMS)",
+      "Liga Națiunilor"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Unde au fost organizate taberele de cercetași din Moldova în timpul Primului Război Mondial?",
+    "answers": [
+      "Doar la București",
+      "La Brașov și Sinaia",
+      "La Solești (Vaslui) și Sculeni (Iași)",
+      "La Mamaia și Constanța"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Ce idealuri au promovat cei 6000 de tineri participanți la prima jamboree internațională?",
+    "answers": [
+      "Câștigarea războiului",
+      "Pacea și prietenia în lume",
+      "Cucerirea de noi teritorii",
+      "Dezvoltarea economică"
+    ],
+    "correct": 1
+  }
+]

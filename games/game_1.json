@@ -1,0 +1,102 @@
+[
+  {
+    "question": "Când s-a născut Robert Baden-Powell, fondatorul cercetășiei?",
+    "answers": [
+      "22 februarie 1857",
+      "1 ianuarie 1899",
+      "1 decembrie 1907",
+      "22 aprilie 1908"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "Care este cartea publicată de Baden-Powell în 1908, fundamentală pentru metoda cercetășească?",
+    "answers": [
+      "Cartea Junglei",
+      "Manualul Liderului",
+      "Scouting for boys",
+      "Arta Cercetării"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Unde a avut loc primul campament cercetășesc de testare din anul 1907?",
+    "answers": [
+      "Pe insula Gilwell",
+      "Pe insula Brownsea",
+      "În Africa de Sud",
+      "În pădurea Charterhouse"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Cum descria Baden-Powell principala noastră datorie în viață?",
+    "answers": [
+      "Să lăsăm lumea un pic mai bună decât am găsit-o",
+      "Să ne apărăm țara cu orice preț",
+      "Să respectăm ordinele fără să punem întrebări",
+      "Să explorăm toate pădurile lumii"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "Cine a apărut în anul 1909 în cadrul mișcării cercetășești?",
+    "answers": [
+      "Cercetașii marini",
+      "Ghidele (cercetașele)",
+      "Lupșorii",
+      "Exploratorii"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "De unde provine termenul englezesc de „scout” (cercetaș)?",
+    "answers": [
+      "Dintr-un joc de societate",
+      "Din numele unui general britanic",
+      "Din „arta cercetării”",
+      "Dintr-un termen marinăresc"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Cum se caracteriza tânărul crescut în patrulă, spre deosebire de soldatul clasic de garnizoană?",
+    "answers": [
+      "Asculta ordinele fără să înțeleagă",
+      "Nu se descurca în situații neprevăzute",
+      "Avea inițiativă, ingeniozitate și spirit de echipă",
+      "Mergea doar la pas și iubea rutina"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Ce misiuni le-au fost date tinerilor din Africa de Sud în timpul asediului din 1899?",
+    "answers": [
+      "De a lupta în linia întâi",
+      "De a duce mesaje, ordine și de a face planton",
+      "De a găti pentru armată",
+      "De a construi adăposturi anti-bombe"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Care dintre următoarele afirmații despre B.P. este FALSĂ conform prezentării?",
+    "answers": [
+      "Iubea natura și urmărea animalele",
+      "Adora să se deghizeze și să facă farse",
+      "Avea o oroare de rutină și de lipsa de imaginație",
+      "Iubea disciplina strictă și lipsa de inițiativă"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "Ce sărbătoresc cercetașii din întreaga lume pe data de 22 februarie?",
+    "answers": [
+      "Ziua națională a Angliei",
+      "Înființarea primei patrule",
+      "Ziua mondială scout (ziua de naștere a lui B.P.)",
+      "Sfârșitul asediului din Africa de Sud"
+    ],
+    "correct": 2
+  }
+]

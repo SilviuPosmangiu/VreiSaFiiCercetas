@@ -1,0 +1,102 @@
+[
+  {
+    "question": "Care dintre următorii mari scriitori și istorici ai religiilor a activat ca cercetaș în România?",
+    "answers": [
+      "Mihai Eminescu",
+      "Mircea Eliade",
+      "Ion Creangă",
+      "Lucian Blaga"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "În ce locație a avut loc prima tabără a cercetașilor români după Primul Război Mondial (1919)?",
+    "answers": [
+      "Cheile Bicazului",
+      "Stâncile lui Solomon, Brașov",
+      "Munții Retezat",
+      "Delta Dunării"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "În anul 1930 a fost organizată Prima Jamboree Națională din România. Unde a avut loc aceasta?",
+    "answers": [
+      "La Sibiu",
+      "La București",
+      "La Mamaia",
+      "La Sinaia"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "Cine a prezidat cea mai mare jamboree din România, organizată la Mamaia în 1934?",
+    "answers": [
+      "Regele Mihai",
+      "Principele Carol",
+      "Principele Nicolae",
+      "Generalul Eremia Grigorescu"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Ce eveniment de cotitură a avut loc în anul 1937 pentru cercetașii români?",
+    "answers": [
+      "Începerea războiului",
+      "Interzicerea uniformelor",
+      "Desființarea Asociației Cercetașii României de regele Carol al II-lea",
+      "Retragerea României din OMMS"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "Cum se numea organizația de masă care a înlocuit cercetășia după 1937, contrazicându-i principiile?",
+    "answers": [
+      "Pionierii României",
+      "Șoimii Patriei",
+      "Straja Țării",
+      "Tineretul Liber"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "În ce an a fost reînființată asociația cercetașilor din România, după căderea regimului comunist?",
+    "answers": [
+      "1989",
+      "1990",
+      "1993",
+      "2000"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Când a redevenit Organizația Națională „Cercetașii României” membru cu drepturi depline al OMMS?",
+    "answers": [
+      "1990",
+      "1993",
+      "1995",
+      "1998"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Care este deviza oficială a cercetașilor din România, menționată ca „parolă secretă” la finalul prezentării?",
+    "answers": [
+      "Fii Pregătit!",
+      "Gata Oricând",
+      "Totainte",
+      "Curaj și Onoare"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Care dintre următorii medici legiști celebri s-au numărat printre personalitățile care au activat în mișcarea cercetășească?",
+    "answers": [
+      "Victor Babeș",
+      "Carol Davila",
+      "Mina și Nicolae Minovici",
+      "Ana Aslan"
+    ],
+    "correct": 2
+  }
+]
